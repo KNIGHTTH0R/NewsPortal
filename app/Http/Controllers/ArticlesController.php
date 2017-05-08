@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use DB;
-use App\article;
+use App\Article;
 
 
 class ArticlesController extends Controller
@@ -82,7 +82,10 @@ class ArticlesController extends Controller
    // function($query) use($id) {
     public function show($id)
     {
+        //$articles = article::find($id)->all();
+       // $articles = article::find($id);
         $articles = article::find($id);
+
         return view('articles.show', compact('articles'));
     }
 
@@ -92,10 +95,11 @@ class ArticlesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(article $article)
+    public function edit($id)
     {
+        $articles = article::find($id);
 
-        return view('articles.edit',compact('article'));
+        return view('articles.edit', compact('articles'));
     }
 
     /**
@@ -107,7 +111,19 @@ class ArticlesController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $articles = articles::find($id);
+        $this->validate($request, ['title'=>'required']);
+        $article->title = $request->title;
+        $article->link = $request->link;
+        $article->text = $request->text;
+        $article->section = $request->section;
+        $article->likes = $request->likes;
+        $article->slug = $request->slug;
+        
+         $article->save();
+         return redirect('articles');
+        
+        
     }
 
     /**
