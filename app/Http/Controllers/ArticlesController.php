@@ -5,6 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use DB;
 use App\Article;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
+use Image;
+
 
 
 class ArticlesController extends Controller
@@ -66,6 +70,22 @@ class ArticlesController extends Controller
         $article->section = $request->section;
         $article->likes = $request->likes;
         $article->slug = $request->slug;
+
+        
+        //save image the database will point this image to the right folder/file
+        if($request->hasFile('image')){
+            $image = $request->file('image');
+            $filename = time() . '.' . $image->getClientOriginalExtension();
+            $location = public_path('images/' . $filename);
+            //this function will create an image object and it will save the image to public/images folder
+            Image::make($image)->resize(400, 300)->save($location);
+
+            $article->image = $filename;
+
+        }
+
+
+
         //$article->timestamp = $request->input();
          $article->save();
          return redirect('articles');
@@ -98,6 +118,7 @@ class ArticlesController extends Controller
     public function edit($id)
     {
         $articles = article::find($id);
+        
 
         return view('articles.edit', compact('articles'));
     }
