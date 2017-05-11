@@ -8,6 +8,7 @@ use App\Article;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Image;
+//use Session;
 
 
 
@@ -19,6 +20,17 @@ class ArticlesController extends Controller
      * @return \Illuminate\Http\Response
      */
     //inside model: article 
+
+   /** public function __construct()
+    {
+        $this->middleware('auth:admin');
+
+        return view('articles',compact('articles'));
+    }
+
+    */
+
+
 
     //use this to check all the routes with the corresponding functions inside the cmd> php artisan route:list
     public function index()
@@ -88,6 +100,9 @@ class ArticlesController extends Controller
 
         //$article->timestamp = $request->input();
          $article->save();
+
+        // Session::flash('succes', 'The article post was succesfully saved!');
+
          return redirect('articles');
         
         //return $request->all();
